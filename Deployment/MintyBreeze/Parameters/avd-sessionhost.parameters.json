@@ -6,55 +6,64 @@
             "value": "westeurope"
         },
         "hostpoolName": {
-            "value": "MintyBreeze-Hostpool"
+            "value": "Infrab-Hostpool"
         },
         "availabilityOption": {
             "value": "None"
         },
         "availabilitySetName": {
-            "value": "BreezeSet"
+            "value": "InfrabSet"
         },
         "availabilityZone": {
             "value": 1
         },
         "galleryResourceGroup": {
-            "value": "RG-ROZ-MINTYBREEZE-COCKTAIL"
+            "value": "rg-Infrab-avd"
         },
         "galleryName":{
-            "value": "SigMintyBreeze"
+            "value": "sig_infrab"
         },
         "galleryImageDefinitionName": {
-            "value": "The-MintyBreeze-Deployment"
+            "value": "The-Infrab-Deployment"
         },
         "rdshPrefix": {
-            "value": "acmb"
+            "value": "rdsh"
         },
         "rdshNumberOfInstances": {
             "value": 1
         },
         "vmInitialNumber": {
-            "value": 2
+            "value": 0
         },
         "rdshVMDiskType": {
             "value": "Premium_LRS"
         },
         "rdshVmSize": {
-            "value": "Standard_D2s_v3"
+            "value": "Standard_D4as_v5"
         },
         "administratorAccountUsername": {
-            "value": "vmjoiner@rozemuller.local"
+            "value": "jonas@infrab.se"
+        },
+        "vmAdministratorAccountUsername": {
+            "value": "admjobo"
+        },
+        "vmAdministratorAccountPassword": {
+            "value": "tej9!QAD3645"
+        },
+        "domain": {
+            "value": "infrab.se"
         },
         "ouPath": {
-            "value": "OU=Computers,OU=WVD,DC=rozemuller,DC=local"
+            "value": "OU=avd,DC=infrab,DC=se"
         },
         "vnetResourceGroup": {
-            "value": "RG-ROZ-MINTYBREEZE-COCKTAIL"
+            "value": "rg-Infrab-avd"
         },
         "vnetName": {
-            "value": "vnet-roz-mintybreeze"
+            "value": "vnet-infrab-avd"
         },
         "subnetName": {
-            "value": "AVDBreezeSubnet"
+            "value": "snet-infrab-avd"
         }
     }
 }

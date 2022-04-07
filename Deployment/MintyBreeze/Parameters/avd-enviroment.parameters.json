@@ -3,25 +3,25 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "hostpoolName": {
-            "value": "MintyBreeze-Hostpool"
+            "value": "Infrab-Hostpool"
         },
         "hostpoolFriendlyName": {
-            "value": "A nice minty and fresh AVD hostpool"
+            "value": "Infrab AVD hostpool"
         },
         "appgroupName": {
-            "value": "MintyApps"
+            "value": "InfrabApps"
         },
         "appgroupNameFriendlyName": {
-            "value": "Apps with a minty taste"
+            "value": "Infrab Apps"
         },
         "workspaceName": {
-            "value": "MintyBreeze"
+            "value": "Infrab"
         },
         "workspaceNameFriendlyName":{
-            "value": "A nice minty and fresh workspace"
+            "value": "Infrab workspace"
         },
         "applicationgrouptype": {
-            "value": "Desktop"
+            "value": "RemoteApp"
         },
         "preferredAppGroupType": {
             "value": "Desktop"
@@ -33,7 +33,7 @@
             "value": "Pooled"
         },
         "loadBalancerType": {
-            "value": "BreadthFirst"
+            "value": "DepthFirst"
         }
     }
 }

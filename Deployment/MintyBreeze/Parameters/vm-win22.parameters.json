@@ -9,16 +9,16 @@
             "value": "vnet-infrab-avd"
         },
         "vmSize": {
-            "value": "Standard_D2s_v3"
+            "value": "Standard_D4as_v5"
         },
         "vmName": {
             "value": "InfrabVm"
         },
         "vmOs": {
-            "value": "20h2-ent-g2"
+            "value": "2022-datacenter-azure-edition"
         },
         "vmOffer":{
-            "value": "Windows-10"
+            "value": "WindowsServer"
         }       
     }
 }

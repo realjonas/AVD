@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "galleryName": {
-            "value": "SigMintyBreeze"
+            "value": "sig_infrab"
         },
         "definitionName": {
-            "value": "The-MintyBreeze-Deployment"
+            "value": "The-Infrab-Deployment"
         },
         "replicaRegion": {
             "value": "westeurope"

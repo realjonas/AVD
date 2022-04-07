@@ -27,7 +27,7 @@ param galleryName string = ''
 
 param galleryImageDefinitionName string = ''
 @description('This prefix will be used in combination with the VM number to create the VM name. This value includes the dash, so if using “rdsh” as the prefix, VMs would be named “rdsh-0”, “rdsh-1”, etc. You should use a unique prefix to reduce name collisions in Active Directory.')
-param rdshPrefix string = take(toLower(resourceGroup().name), 10)
+param rdshPrefix string
 
 @description('Number of session hosts that will be created and added to the hostpool.')
 param rdshNumberOfInstances int
@@ -41,7 +41,7 @@ param rdshNumberOfInstances int
 param rdshVMDiskType string
 
 @description('The size of the session host VMs.')
-param rdshVmSize string = 'Standard_A2'
+param rdshVmSize string = 'Standard_D4as_v5'
 
 @description('Enables Accelerated Networking feature, notice that VM size must support it, this is supported in most of general purpose and compute-optimized instances with 2 or more vCPUs, on instances that supports hyperthreading it is required minimum of 4 vCPUs.')
 param enableAcceleratedNetworking bool = false
@@ -54,11 +54,11 @@ param administratorAccountUsername string
 param administratorAccountPassword string
 
 @description('A username to be used as the virtual machine administrator account. The vmAdministratorAccountUsername and  vmAdministratorAccountPassword parameters must both be provided. Otherwise, domain administrator credentials provided by administratorAccountUsername and administratorAccountPassword will be used.')
-param vmAdministratorAccountUsername string = ''
+param vmAdministratorAccountUsername string = 'admjobo'
 
 @description('The password associated with the virtual machine administrator account. The vmAdministratorAccountUsername and  vmAdministratorAccountPassword parameters must both be provided. Otherwise, domain administrator credentials provided by administratorAccountUsername and administratorAccountPassword will be used.')
 @secure()
-param vmAdministratorAccountPassword string = ''
+param vmAdministratorAccountPassword string
 
 @description('Give the VNET ResourceGroup.')
 param vnetResourceGroup string
@@ -98,7 +98,7 @@ param hostpoolName string
 param ouPath string = ''
 
 @description('Domain to join')
-param domain string = ''
+param domain string
 
 @description('IMPORTANT: Please don\'t use this parameter as AAD Join is not supported yet. True if AAD Join, false if AD join')
 param aadJoin bool = false
@@ -109,7 +109,7 @@ param intune bool = false
 param virtualMachineTags object = {}
 
 var emptyArray = []
-var domain_var = ((domain == '') ? last(split(administratorAccountUsername, '@')) : domain)
+var domain_var = domain //((domain == '') ? last(split(administratorAccountUsername, '@')) : domain)
 var storageAccountType = rdshVMDiskType
 var newNsgName = '${rdshPrefix}nsg-${guidValue}'
 var nsgId = (createNetworkSecurityGroup ? resourceId('Microsoft.Network/networkSecurityGroups', newNsgName) : networkSecurityGroupId)
@@ -158,7 +158,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2018-11-01' = [for i in range(
 }]
 
 resource vm 'Microsoft.Compute/virtualMachines@2018-10-01' = [for i in range(0, rdshNumberOfInstances): {
-  name: concat('${rdshPrefix}, ${(i + vmInitialNumber)}-')
+  name: '${rdshPrefix}${(i + vmInitialNumber)}'
   location: location
   tags: virtualMachineTags
   identity: {
@@ -170,7 +170,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2018-10-01' = [for i in range(0, 
     }
     availabilitySet: ((availabilityOption == 'AvailabilitySet') ? vmAvailabilitySetResourceId : json('null'))
     osProfile: {
-      computerName: concat(rdshPrefix, (i + vmInitialNumber))
+      computerName: '${rdshPrefix}${(i + vmInitialNumber)}'
       adminUsername: vmAdministratorUsername
       adminPassword: vmAdministratorPassword
     }
@@ -205,60 +205,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2018-10-01' = [for i in range(0, 
   ]
 }]
 
-resource vm_DSC 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = [for i in range(0, rdshNumberOfInstances): {
-  name: '${rdshPrefix}${(i + vmInitialNumber)}/Microsoft.PowerShell.DSC'
-  location: location
-  properties: {
-    publisher: 'Microsoft.Powershell'
-    type: 'DSC'
-    typeHandlerVersion: '2.73'
-    autoUpgradeMinorVersion: true
-    settings: {
-      modulesUrl: artifactsLocation
-      configurationFunction: 'Configuration.ps1\\AddSessionHost'
-      properties: {
-        hostPoolName: hostpoolName
-        registrationInfoToken: hostpoolToken
-        aadJoin: aadJoin
-      }
-    }
-  }
-  dependsOn: [
-    vm
-  ]
-}]
-
-resource vm_AADLoginForWindows 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = [for i in range(0, rdshNumberOfInstances): if (aadJoin && !intune) {
-  name: '${rdshPrefix}${(i + vmInitialNumber)}/AADLoginForWindows'
-  location: location
-  properties: {
-    publisher: 'Microsoft.Azure.ActiveDirectory'
-    type: 'AADLoginForWindows'
-    typeHandlerVersion: '1.0'
-    autoUpgradeMinorVersion: true
-  }
-  dependsOn: [
-    vm_DSC
-  ]
-}]
-
-resource vm_AADLoginForWindowsWithIntune 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = [for i in range(0, rdshNumberOfInstances): if (aadJoin && intune) {
-  name: '${rdshPrefix}${(i + vmInitialNumber)}/AADLoginForWindowsWithIntune'
-  location: location
-  properties: {
-    publisher: 'Microsoft.Azure.ActiveDirectory'
-    type: 'AADLoginForWindows'
-    typeHandlerVersion: '1.0'
-    autoUpgradeMinorVersion: true
-    settings: {
-      mdmId: '0000000a-0000-0000-c000-000000000000'
-    }
-  }
-  dependsOn: [
-    vm_DSC
-  ]
-}]
-
 resource vm_joindomain 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = [for i in range(0, rdshNumberOfInstances): if (!aadJoin) {
   name: '${rdshPrefix}${(i + vmInitialNumber)}/joindomain'
   location: location
@@ -279,6 +225,29 @@ resource vm_joindomain 'Microsoft.Compute/virtualMachines/extensions@2018-10-01'
     }
   }
   dependsOn: [
-    vm_DSC
+    vm
+  ]
+}]
+
+resource vm_DSC 'Microsoft.Compute/virtualMachines/extensions@2018-10-01' = [for i in range(0, rdshNumberOfInstances): {
+  name: '${rdshPrefix}${(i + vmInitialNumber)}/Microsoft.PowerShell.DSC'
+  location: location
+  properties: {
+    publisher: 'Microsoft.Powershell'
+    type: 'DSC'
+    typeHandlerVersion: '2.73'
+    autoUpgradeMinorVersion: true
+    settings: {
+      modulesUrl: artifactsLocation
+      configurationFunction: 'Configuration.ps1\\AddSessionHost'
+      properties: {
+        hostPoolName: hostpoolName
+        registrationInfoToken: hostpoolToken
+        aadJoin: aadJoin
+      }
+    }
+  }
+  dependsOn: [
+    vm_joindomain
   ]
 }]

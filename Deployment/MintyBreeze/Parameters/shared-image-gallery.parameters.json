@@ -6,16 +6,16 @@
           "value": "WestEurope"
       },
       "sigName": {
-          "value": "SigMintyBreeze"
+          "value": "sig_infrab"
       },
       "imagePublisher": {
-          "value": "Minty"
+          "value": "Infrab"
       },
       "imageDefinitionName": {
-          "value": "The-MintyBreeze-Deployment"
+          "value": "The-Infrab-Deployment"
       },
       "imageOffer": {
-          "value": "Breeze"
+          "value": "Windows2022"
       },
       "imageSKU": {
         "value": "Deployment"

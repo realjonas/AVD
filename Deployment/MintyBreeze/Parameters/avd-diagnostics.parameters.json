@@ -3,16 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "logAnalyticsWorkspaceName": {
-            "value": "MintyWorkspace"
+            "value": "InfrabWorkspace"
         },
         "logAnalyticsWorkspaceSku": {
             "value": "pergb2018"
         },
         "hostpoolName": {
-            "value": "MintyBreeze-Hostpool"
+            "value": "Infrab-Hostpool"
         },
         "workspaceName": {
-            "value": "MintyBreeze"
+            "value": "Infrab"
         },
         "hostpoolLogs": {
             "value": {

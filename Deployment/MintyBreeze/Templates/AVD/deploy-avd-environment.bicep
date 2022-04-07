@@ -5,7 +5,6 @@ param appgroupName string
 param appgroupNameFriendlyName string
 param workspaceName string
 param workspaceNameFriendlyName string
-param applicationgrouptype string
 param preferredAppGroupType string
 param avdlocation string 
 
@@ -34,6 +33,12 @@ resource hp 'Microsoft.DesktopVirtualization/hostpools@2019-12-10-preview' = {
     preferredAppGroupType: preferredAppGroupType
   }
 }
+
+@allowed([
+  'Desktop'
+  'RemoteApp'
+])
+param applicationgrouptype string
 
 //Create AVD AppGroup
 resource ag 'Microsoft.DesktopVirtualization/applicationgroups@2019-12-10-preview' = {
